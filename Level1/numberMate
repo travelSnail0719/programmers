@@ -1,0 +1,24 @@
+function solution(X, Y) {
+    let answer = [];
+    let splitX = X.split('')
+    let splitY = Y.split('')
+
+    for(let x = 0; x < splitX.length; x++){
+        for(let y = 0; y < splitY.length; y++){
+            if(splitX[x] == splitY[y]){
+                answer.push(splitX[x]);
+                splitX.splice(x, 1); x--;
+                splitY.splice(y, 1); y--;
+            }
+        }
+    }
+
+    if(answer.length <= 0){
+        return "-1"
+    } else if((answer.filter((i, v) => answer.indexOf(i) == v)) == 0){
+        return "0"
+    } else {
+        return answer.sort((a, b) => b - a).join('');
+    }
+}
+// 다중for문으로인한 시간초과.. 아직 마무리 못함.
