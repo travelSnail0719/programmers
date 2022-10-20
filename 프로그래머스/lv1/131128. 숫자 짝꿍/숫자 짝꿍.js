@@ -1,20 +1,15 @@
 function solution(X, Y) {
   var answer = "";
-
-  X = [...X];
-  Y = [...Y];
-
-  for (let i = 0; i < 10; i++) {
-    const X_cnt = X.filter((item) => +item === i).length;
-    const Y_cnt = Y.filter((item) => +item === i).length;
-		answer += i.toString().repeat(Math.min(X_cnt, Y_cnt));
-  }
-
-  if (answer === "") {
-    return "-1";
-  } else if (answer.match(/[^0]/g) === null) {
-    return "0";
-  } else {
-    return [...answer].sort().reverse().join("");
-  }
+  X = X.split("").sort((a, b) => b - a);
+  Y = Y.split("").sort((a, b) => b - a);
+  let x = 0,
+    y = 0;
+  while (x < X.length && y < Y.length)
+    if (X[x] > Y[y]) x++;
+    else if (X[x] < Y[y]) y++;
+    else {
+      answer += X[x];
+      x++, y++;
+    }
+  return answer.length === 0 ? "-1" : answer[0] === "0" ? "0" : answer;
 }
