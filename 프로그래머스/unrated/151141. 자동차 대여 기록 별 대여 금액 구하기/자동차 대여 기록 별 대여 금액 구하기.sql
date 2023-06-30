@@ -1,0 +1,29 @@
+-- 코드를 입력하세요
+SELECT D.HISTORY_ID
+     , D.FEE
+FROM (
+SELECT C.HISTORY_ID
+     , CASE WHEN C.RENT_DURATION >= 90 THEN C.DAILY_FEE * (1 - 15 / 100) * C.RENT_DURATION 
+            WHEN C.RENT_DURATION >= 30 THEN C.DAILY_FEE * (1 - 8 / 100) * C.RENT_DURATION
+            WHEN C.RENT_DURATION >= 7 THEN C.DAILY_FEE * (1 - 5 / 100) * C.RENT_DURATION
+            ELSE C.DAILY_FEE * C.RENT_DURATION 
+       END AS FEE
+     , C.RENT_DURATION 
+FROM (SELECT A.CAR_ID
+           , A.CAR_TYPE
+           , A.DAILY_FEE
+           , A.OPTIONS
+           , B.RENT_DURATION
+           , B.HISTORY_ID
+      FROM CAR_RENTAL_COMPANY_CAR  A
+         , (SELECT CAR_ID
+                 , SUM(END_DATE - START_DATE + 1) AS RENT_DURATION
+                 , HISTORY_ID
+            FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY
+            GROUP BY CAR_ID
+                   , HISTORY_ID) B
+      WHERE A.CAR_ID = B.CAR_ID
+      AND A.CAR_TYPE = '트럭') C
+      ) D
+ORDER BY D.FEE DESC
+       , D.HISTORY_ID DESC
