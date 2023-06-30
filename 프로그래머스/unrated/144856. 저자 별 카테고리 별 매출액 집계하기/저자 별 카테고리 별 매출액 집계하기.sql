@@ -1,0 +1,24 @@
+-- 코드를 입력하세요
+SELECT F.AUTHOR_ID
+     , F.AUTHOR_NAME
+     , F.CATEGORY 
+     , SUM(F.TOTAL_SALES) AS TOTAL_SALES
+FROM (SELECT B.AUTHOR_ID
+           , B.AUTHOR_NAME
+           , A.CATEGORY
+           , TO_NUMBER(A.PRICE) * TO_NUMBER(C.SALES) AS TOTAL_SALES
+      FROM BOOK A
+         , AUTHOR B
+         , (SELECT A.BOOK_ID
+                 , A.SALES 
+            FROM(SELECT BOOK_ID
+                      , TO_CHAR(SALES_DATE, 'YYYY-MM') AS SALES_DATE
+                      , SALES
+                 FROM BOOK_SALES) A
+            WHERE A.SALES_DATE = '2022-01') C
+      WHERE A.AUTHOR_ID = B.AUTHOR_ID
+      AND A.BOOK_ID = C.BOOK_ID) F
+GROUP BY F.AUTHOR_ID
+       , F.AUTHOR_NAME
+       , F.CATEGORY
+ORDER BY F.AUTHOR_ID ASC, F.CATEGORY DESC
