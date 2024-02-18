@@ -7,7 +7,6 @@ function solution(s) {
         if(idx === 0){
             lastIdx = -1;
         } 
-        
         return lastIdx !== -1 ? idx - lastIdx : -1;
     })
     return answer;
